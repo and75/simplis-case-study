@@ -1,0 +1,7 @@
+{
+  "name": "symply-test-frontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
