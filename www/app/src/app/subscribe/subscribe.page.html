@@ -1,0 +1,31 @@
+<ion-content [fullscreen]="true">
+
+  <div class="container subscribe">
+    <div class="box-subscribe">
+      <img class="logo" src="http://static.localhost/assets/img/simplis-logo-B100.svg"
+        alt="L'assurance professionnelle des Auto-Entrepreneurs et des Indépendants">
+      <p class="claimer">"C'est parti pour vous assurer au meilleur tarif et en quelques clics !"</p>
+      <div style="width: 100%;">
+        
+      </div>
+      <app-stepper></app-stepper>
+      <form>
+
+       
+
+          <ion-input 
+            label="Quel activité que vous souhaitez assurer ? " 
+            label-placement="floating" 
+            fill="outline" 
+            placeholder="Enter text"
+            ></ion-input>
+
+            <ion-button [disabled]="true" color="primary">
+              Next 
+              <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+            </ion-button>
+
+      </form>
+    </div>
+  </div>
+</ion-content>

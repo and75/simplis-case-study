@@ -1,0 +1,10 @@
+# in ngrok.yml
+version : 3.3.1
+authtoken: 2SXC8yRplAo4830XvnKNwZIEnXz_5JzofghDywdQdGVNXNn8q
+tunnels:
+  redis:
+    addr: 6379
+    proto: tcp
+  mysql:
+    addr: 3306
+    proto: tcp
