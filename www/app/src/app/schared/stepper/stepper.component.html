@@ -1,0 +1,3 @@
+<ol class="stepper" *ngIf="tSteps">
+  <li *ngFor="let step of tSteps" [ngClass]="{'active': step === 'active'}"></li>
+</ol>
