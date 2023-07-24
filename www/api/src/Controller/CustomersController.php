@@ -60,7 +60,7 @@ class CustomersController extends MainController
             return $this->setResponse(true, 'Found %s customers', $data);
         }
         catch (\Exception $e) {
-            return $this->setResponse(false, $e->getMessage(), $data, 500 );
+            return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
 
@@ -86,7 +86,7 @@ class CustomersController extends MainController
             return $this->setResponse(true, 'Not Found', $data);
         }
         catch (\Exception $e) {
-            return $this->setResponse(false, $e->getMessage(), $data, 500 );
+            return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
 

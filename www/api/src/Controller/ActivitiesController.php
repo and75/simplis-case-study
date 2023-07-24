@@ -61,7 +61,7 @@ class ActivitiesController extends MainController
             return $this->setResponse(true, 'Found activities', $data);
         }
         catch (\Exception $e) {
-            return $this->setResponse(false, $e->getMessage(), $data, 500 );
+            return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
 
@@ -88,7 +88,7 @@ class ActivitiesController extends MainController
 
         }
         catch (\Exception $e) {
-            return $this->setResponse(false, $e->getMessage(), $data, 500 );
+            return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
 }
