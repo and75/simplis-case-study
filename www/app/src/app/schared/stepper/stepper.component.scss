@@ -2,7 +2,7 @@
 ol.stepper {
     --default-b: lightgrey;
     --default-c: black;
-    --active-b: #16CC77;
+    --active-b: var(--ion-color-primary);
     --active-c: white;
     --circle: 2.5em; /* size of circle */
     --b: 5px; /* line thickness */
@@ -62,6 +62,7 @@ ol.stepper {
     
   }
   
+  /*
   @media (max-width: 600px) {
     ol.stepper {
      display: grid;
@@ -85,3 +86,4 @@ ol.stepper {
       background: var(--active-b);
     }
   }
+  */
