@@ -3,5 +3,6 @@
 /.vscode
 /config/*
 /logs/*
+/data/*
 .DS_Store
 /buildtest

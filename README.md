@@ -2,17 +2,16 @@
 
 
 
-# Symply test
+# Simplis Case Study
+The goal of this case study is to create a tunnel of professional civil liability devices.
 
-## Backend
-- Symfony 6.3
-
-## Frontend
-- Angular 13
+## Stack
+- Backend : Symfony 6.3
+- Frontend : Angular 16
 
 
 ## Infrastructure
-The project infrastructure is based on a basic LAMP stack environment built using Docker Compose. It consists of the following:
+The project come whith infrastructure based on a basic LAMP stack environment built using Docker Compose. It consists of the following :
 
 - PHP 8.1.x
 - Apache
@@ -41,13 +40,12 @@ docker-compose up -d
 
 Your stack is now ready!! You can access it via `http://localhost`.
 
-## Configuration and Usage
 
 ### General Information
 
 This Docker Stack is build for local development and not for production usage.
 
-## Web Server
+### Web Server
 
 Apache is configured to run on port 80. So, you can access it via `http://localhost`.
 
@@ -66,7 +64,7 @@ You can connect to web server using `docker-compose exec` command to perform var
 docker-compose exec webserver bash
 ```
 
-## PHP
+### PHP
 
 #### Extensions
 
@@ -87,7 +85,7 @@ May differ for PHP Versions <7.x.x
 - xmlrpc
 - gd
 
-## phpMyAdmin
+### phpMyAdmin
 
 phpMyAdmin is configured to run on port 8080. Use following default credentials.
 
@@ -95,7 +93,7 @@ http://localhost:8080/
 username: root  
 password: tiger
 
-## Xdebug
+### Xdebug
 
 Xdebug comes installed by default and it's version depends on the PHP version chosen in the `".env"` file.
 
@@ -105,6 +103,6 @@ PHP <= 7.3: Xdebug 2.X.X
 
 PHP >= 7.4: Xdebug 3.X.X
 
-## Redis
+### Redis
 
 It comes with Redis. It runs on default port `6379`.
