@@ -6,39 +6,52 @@
   margin: 0 30px;
 }
 
-.box-subscribe{
+.box-subscribe {
 
   display: flex;
   align-items: center;
   flex-direction: column;
-  min-height:60vh;
+  min-height: 60vh;
   max-width: 600px;
 
-  img.logo{
+  img.logo {
     width: 200px;
   }
 
   .claimer {
     text-align: center;
-    color: #2dd36f;
+    color: var(--ion-color-secondary);
     font-size: 0.9rem;
   }
 
-  app-stepper{
+  app-stepper {
     width: 70%;
   }
 
-  form{
+  form {
     width: 100%;
     text-align: center;
-    margin-top:1rem;
+    margin-top: 1rem;
 
-    ion-input{
+    fieldset {
+      border: thick solid var(--ion-color-primary);
+      border-radius: 15px;
+    }
+
+    legend {
+      color: #FFF;
+      background: var(--ion-color-primary);
+      font-size: 1em;
+      padding: 5px 15px;
+      border-radius: 10px;
+    }
+
+    ion-input {
       text-align: left;
     }
-    
-    ion-button{
-      margin-top:2rem;
+
+    ion-button {
+      margin-top: 2rem;
     }
 
   }
