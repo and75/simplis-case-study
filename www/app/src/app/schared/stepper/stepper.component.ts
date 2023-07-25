@@ -12,26 +12,21 @@ export class StepperComponent  implements OnInit {
   @Output() stepEvent = new EventEmitter<number>();
 
   public tSteps:string[] = [];
-  public actives:any = new Set();
 
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit() {
-    
     for(let i=0; i<this.steps; i++){
-      let isActive = (this.current-1 == i ) ? 'active' : 'disabled';
+      let isActive = (this.current-1 === i ) ? 'active' : 'disabled';
       this.tSteps.push(isActive); 
     }
-    this.actives.add(this.current);
-    console.log(this.actives)
-
   }
 
   setStep(step:number){
-    this.current = step
-    this.actives.add(step);
+    this.tSteps = this.tSteps.map((e, index)=>e= (step<index) ? "disabled" : 'active');
+    this.tSteps[step] = 'active';
+    this.current = step+1
+    console.log(this.current);
     this.stepEvent.emit(this.current);
   }
 

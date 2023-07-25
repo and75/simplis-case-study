@@ -5,10 +5,44 @@
       <img class="logo" src="http://static.localhost/assets/img/simplis-logo-B100.svg"
         alt="L'assurance professionnelle des Auto-Entrepreneurs et des Indépendants">
       <p class="claimer" color="secondary">"C'est parti pour vous assurer au meilleur tarif et en quelques clics !"</p>
-      <app-stepper></app-stepper>
+      <app-stepper [current]="subscription.currentStep" (stepEvent)="setStep($event)"></app-stepper>
       <form>
-        <fieldset>
+        <fieldset *ngIf="subscription.currentStep==1">
           <legend>Quel activité que vous souhaitez assurer ? </legend>
+          <ion-list>
+            <ion-item>
+              <ion-input [clearInput]="true" placeholder="Enter text">
+              </ion-input>
+            </ion-item>
+            </ion-list>
+        </fieldset>
+        <fieldset *ngIf="subscription.currentStep==2">
+          <legend>Quelques informations sur votre entreprise !</legend>
+          <ion-list>
+            <ion-item>
+              <ion-input [clearInput]="true" label="Raison sociale" labelPlacement="floating" >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input [clearInput]="true" label="Siret" labelPlacement="floating" >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input [clearInput]="true" label="Adresse postale" labelPlacement="floating" >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input [clearInput]="true" label="Email" labelPlacement="floating" >
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input [clearInput]="true" label="Téléphone" labelPlacement="floating" >
+              </ion-input>
+            </ion-item>
+            </ion-list>
+        </fieldset>
+        <fieldset *ngIf="subscription.currentStep==3">
+          <legend>Notre offre sur mesure pour vous !</legend>
           <ion-list>
             <ion-item>
               <ion-input [clearInput]="true" placeholder="Enter text">

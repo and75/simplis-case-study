@@ -1,3 +1,3 @@
 <ol class="stepper" *ngIf="tSteps">
-  <li *ngFor="let step of tSteps" [ngClass]="{'active': step === 'active'}"></li>
+  <li *ngFor="let step of tSteps; index as i" [ngClass]="step === 'active' ? 'active' : 'disabled'" (click)="setStep(i)"></li>
 </ol>

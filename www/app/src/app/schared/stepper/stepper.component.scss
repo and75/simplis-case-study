@@ -38,16 +38,16 @@ ol.stepper {
         height: var(--circle);
         border: 5px solid #fff;
         box-sizing: border-box;
-        background: var(--active-b);
-        color: var(--active-c);
+        background: var(--default-b);
+        color: var(--default-c);
         border-radius: 50%;
         font-family: monospace;
         z-index: 1;
       }
 
-      li.active ~ li::before{
-        background: var(--default-b);
-        color: var(--default-c);
+      li.active::before{
+        background: var(--active-b);
+        color: var(--active-c);
       }
 
       li.active::after {
