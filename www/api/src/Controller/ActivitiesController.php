@@ -27,14 +27,17 @@ class ActivitiesController extends MainController
                     $data[] = [
                         'id'=>$activity->getId(),
                         'name'=>$activity->getName(),
-                        'coverage'=>$activity->getCoverage()
+                        'coverage'=>$activity->getCoverage(),
+                        'price'=>$activity->getPrice()->getPriceTt()
                     ];
                 }
             } else{
                 $data[] = [
                     'id'=>$activities->getId(),
                     'name'=>$activities->getName(),
-                    'coverage'=>$activities->getCoverage()
+                    'coverage'=>$activities->getCoverage(),
+                    'price'=>$activities->getPrice(),
+                    'price_d'=>$activities->getPriceD()->getPriceTt()
                 ];
             }
         } 
@@ -42,6 +45,7 @@ class ActivitiesController extends MainController
     }
 
    
+ 
     /**
      * Method index
      *

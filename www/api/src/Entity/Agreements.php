@@ -20,11 +20,20 @@ class Agreements
     #[ORM\ManyToOne(inversedBy: 'agreements')]
     private ?Activities $activity = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date = null;
+    #[ORM\Column(length: 100)]
+    private ?string $time_created = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $time = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_created = null;
+
+    #[ORM\Column(length: 10)]
+    private ?string $status = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_signed = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $time_signed = null;
 
     public function getId(): ?int
     {
@@ -55,26 +64,62 @@ class Agreements
         return $this;
     }
 
-    public function getDate(): ?\DateTimeInterface
+    public function getTimeCreated(): ?string
     {
-        return $this->date;
+        return $this->time_created;
     }
 
-    public function setDate(?\DateTimeInterface $date): static
+    public function setTimeCreated(string $time_created): static
     {
-        $this->date = $date;
+        $this->time_created = $time_created;
 
         return $this;
     }
 
-    public function getTime(): ?string
+    public function getDateCreated(): ?\DateTimeInterface
     {
-        return $this->time;
+        return $this->date_created;
     }
 
-    public function setTime(?string $time): static
+    public function setDateCreated(\DateTimeInterface $date_created): static
     {
-        $this->time = $time;
+        $this->date_created = $date_created;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDateSigned(): ?\DateTimeInterface
+    {
+        return $this->date_signed;
+    }
+
+    public function setDateSigned(?\DateTimeInterface $date_signed): static
+    {
+        $this->date_signed = $date_signed;
+
+        return $this;
+    }
+
+    public function getTimeSigned(): ?string
+    {
+        return $this->time_signed;
+    }
+
+    public function setTimeSigned(?string $time_signed): static
+    {
+        $this->time_signed = $time_signed;
 
         return $this;
     }

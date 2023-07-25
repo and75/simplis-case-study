@@ -26,12 +26,6 @@ cd symply-test-technique
 docker-compose up -d
 // visit localhost
 ```
-- Migrate DB
-
-```shell
-docker-compose exec webserver bash
-php bin/console doctrine:migrations:migrate
-```
 
 - Set virtual host 
 ```shell
@@ -40,7 +34,26 @@ php bin/console doctrine:migrations:migrate
 127.0.0.1 static.localhost
 ```
 
-Your stack is now ready!! You can access it via `http://localhost`.
+- Synfony prepare DB
+
+```shell
+docker-compose exec webserver bash
+cd api
+php bin/console doctrine:migrations
+php bin/console doctrine:migrations:migrate
+```
+
+- Populate Db
+```
+http://api.localhost/populate
+```
+
+- Ionic build
+
+```shell
+cd app
+ionic build
+```
 
 
 ### General Information
@@ -86,6 +99,7 @@ May differ for PHP Versions <7.x.x
 - xml
 - xmlrpc
 - gd
+- dom
 
 ### phpMyAdmin
 

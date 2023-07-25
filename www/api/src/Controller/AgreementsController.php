@@ -113,15 +113,18 @@ class AgreementsController extends MainController
 
             $customer = $this->em->getRepository(Customers::class)->find($data["customer_id"]);
             $activity = $this->em->getRepository(Activities::class)->find($data["activity_id"]);
+            
             $date = new DateTime;
+            $time = time();
 
             $agreements = new Agreements();
             $agreements->setCustomer($customer);
             $agreements->setActivity($activity);
-            $agreements->setDate($date);
-            $agreements->setTime(time());
+            $agreements->setDateCreated($date);
+            $agreements->setTimeCreated($time);
+            $agreements->setStatus('devis');
 
-            $this->em->persist($customer);
+            $this->em->persist($agreements);
             $this->em->flush();
 
             return $this->setResponse(true, 'The entity was created successfully', $customer->getId());
