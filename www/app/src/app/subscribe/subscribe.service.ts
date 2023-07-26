@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { Activity, Customer, Subscribe } from '../../models/subscribe';
+import { Payload } from '../../models/payload';
+import { Subscription } from '../../models/subscribe';
+
 import { AuthService } from '../auth.service'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
@@ -23,21 +25,34 @@ export class SubscribeService {
   }
 
   /** GET All Books */
-  getActivities(): Observable<Activity[]> {
+  getActivities(): Observable<any> {
     const url = `${this.ApiServiceUrl}activities`;
-    return this.http.get<Activity[]>(url, { headers: this.Header }).pipe(
+    return this.http.get<Payload>(url, { headers: this.Header }).pipe(
       tap(_ => this.log(`fetched getActivities (all)`)),
       catchError(this.handleError('getActivities (all)', []))
     );
   }
 
-  downloadPdf(id: string): Observable<any> {
-    let ApiUrl = `${environment.apiUrl}drive/download/${id}`;
-    return this.http.get<any>(ApiUrl, { headers: this.Header, responseType: 'blob' as 'json' })
-      .pipe(
-        tap(_ => this.log(`fetched downloadPdf `)),
-        catchError(this.handleError<any>(`downloadPdf`))
+  searchActivities(search:string): Observable<any> {
+
+      if (!search.trim()) {
+        return of([]);
+      }
+    
+      const url = `${this.ApiServiceUrl}activities/search?q=${search}`;
+      return this.http.get<Payload>(url, { headers: this.Header }).pipe(
+        tap(_ => this.log(`fetched AppSearch matching "${search}"`)),
+        catchError(this.handleError<any[]>('AppSearch', []))
       );
+      
+  }
+
+  saveSubscription(data:Subscription): Observable<any>{
+    const url = `${this.ApiServiceUrl}activities`;
+    return this.http.get<Payload>(url, { headers: this.Header }).pipe(
+      tap(_ => this.log(`fetched getActivities (all)`)),
+      catchError(this.handleError('getActivities (all)', []))
+    );
   }
 
   /* handleError */

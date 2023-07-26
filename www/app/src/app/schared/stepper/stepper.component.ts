@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter,OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-stepper',
@@ -21,6 +21,18 @@ export class StepperComponent  implements OnInit {
       this.tSteps.push(isActive); 
     }
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const log: string[] = [];
+    for (const current in changes) {
+      const changedProp = changes[current];
+      const to = changedProp.currentValue;
+      if (!changedProp.isFirstChange()) {
+        this.setStep(to-1);
+      } 
+    }
+    
+}
 
   setStep(step:number){
     this.tSteps = this.tSteps.map((e, index)=>e= (step<index) ? "disabled" : 'active');

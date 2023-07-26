@@ -1,64 +1,79 @@
 <ion-content [fullscreen]="true">
 
-  <div class="container subscribe">
-    <div class="box-subscribe">
-      <img class="logo" src="http://static.localhost/assets/img/simplis-logo-B100.svg"
-        alt="L'assurance professionnelle des Auto-Entrepreneurs et des Indépendants">
-      <p class="claimer" color="secondary">"C'est parti pour vous assurer au meilleur tarif et en quelques clics !"</p>
-      <app-stepper [current]="subscription.currentStep" (stepEvent)="setStep($event)"></app-stepper>
-      <form>
-        <fieldset *ngIf="subscription.currentStep==1">
-          <legend>Quel produit recherchez-vous ? </legend>
-          <ion-list>
-            <ion-item>
-              <ion-input [clearInput]="true" placeholder="Enter text">
+  <div class="main">
+    <div class="container">
+      <div class="box-subscribe">
+        <img class="logo" src="http://static.localhost/assets/img/simplis-logo-B100.svg"
+          alt="L'assurance professionnelle des Auto-Entrepreneurs et des Indépendants">
+        <p class="claimer" color="secondary">"C'est parti pour vous assurer au meilleur tarif et en quelques clics !"
+        </p>
+        <app-stepper [current]="subscription.currentStep" (stepEvent)="setStep($event)"></app-stepper>
+        <form *ngIf="subscription.currentStep==1">
+          <fieldset>
+            <legend>Quel produit recherchez-vous ? </legend>
+
+            <ion-input [clearInput]="true" placeholder="Enter text" [(ngModel)]="query" id="query" name="query"
+              (keyup)="filter($event)" helperText="Rechercher parmi nos profils assurables" >
+            </ion-input>
+
+            <div class="autocomplete">
+              <ul>
+                <legend>{{getAutocompleteLabel()}}</legend>
+                <li *ngFor="let activity of findedActivities" (click)="setActivity(activity)">{{activity.name}}</li>
+              </ul>
+            </div>
+          </fieldset>
+        </form>
+
+        <!-- STEP 2-->
+
+          <form [formGroup]="formData" (ngSubmit)="saveCustomer()" *ngIf="subscription.currentStep==2">
+            <fieldset>
+              <legend>Quelques informations sur votre entreprise !</legend>
+              <ion-input formControlName="raison_sociale" label="Raison sociale" labelPlacement="floating"
+                helperText="Le nom de votre entreprise" errorText="Ce champ est obligatoire" autocomplete="false"
+                errorText="Ce champ est obligatoire" [clearInput]="true">
               </ion-input>
-            </ion-item>
-            </ion-list>
-        </fieldset>
-        <fieldset *ngIf="subscription.currentStep==2">
-          <legend>Quelques informations sur votre entreprise !</legend>
-          <ion-list>
-            <ion-item>
-              <ion-input [clearInput]="true" label="Raison sociale" labelPlacement="floating" >
+              <ion-input formControlName="siret" [clearInput]="true" label="Siret" labelPlacement="floating"
+                helperText="Votre numero de Siret" errorText="Ce champ est obligatoire" autocomplete="false">
               </ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input [clearInput]="true" label="Siret" labelPlacement="floating" >
+              <ion-input formControlName="adresse_postale" [clearInput]="true" label="Adresse postale"
+                helperText="L'adresse postale de votre societè" errorText="Ce champ est obligatoire"
+                labelPlacement="floating" autocomplete="false">
               </ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input [clearInput]="true" label="Adresse postale" labelPlacement="floating" >
+              <ion-input formControlName="email" [clearInput]="true" label="Email" labelPlacement="floating"
+                autocomplete="false" helperText="L'adresse e-mail avec laquelle nous pouvons vous écrire"
+                errorText="Ce champ est obligatoire">
               </ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input [clearInput]="true" label="Email" labelPlacement="floating" >
+              <ion-input formControlName="telephone" [clearInput]="true" label="Téléphone" labelPlacement="floating"
+                autocomplete="false" helperText="Le numéro de téléphone auquel nous pouvons vous joindre"
+                errorText="Ce champ est obligatoire">
               </ion-input>
-            </ion-item>
-            <ion-item>
-              <ion-input [clearInput]="true" label="Téléphone" labelPlacement="floating" >
-              </ion-input>
-            </ion-item>
-            </ion-list>
-        </fieldset>
-        <fieldset *ngIf="subscription.currentStep==3" class="step3">
-          <legend>Notre offre sur mesure pour vous !</legend>
-          <ion-card color="secondary">
-            <ion-card-header>
-              <ion-card-title>9.99 €</ion-card-title>
-              <ion-card-subtitle>Achat de coupe de bois</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-              <div><ion-icon name="download-outline" aria-label="Download devis"></ion-icon></div>
-              <div>Téléchargez votre devis</div>
-            </ion-card-content>
-          </ion-card>
-        </fieldset>
-        <ion-button [disabled]="subscription.currentStep<3" [color]="(subscription.currentStep) < 3 ? 'secondary' : 'primary'">
-           {{getStepButtonTitle()}}
-          <ion-icon name="arrow-forward-circle-outline"></ion-icon>
-        </ion-button>
-      </form>
+            </fieldset>
+            <ion-button type="submit" color="secondary" [disabled]="!formData.valid">
+              {{getStepButtonTitle()}}
+              <ion-icon name="arrow-forward-circle-outline" *ngIf=""></ion-icon>
+            </ion-button>
+          </form>
+        <!-- END STEP 2-->
+        <!-- STEP 3 -->
+        <form *ngIf="subscription.currentStep==3">
+          <fieldset  class="step3">
+            <legend>Notre offre sur mesure pour vous !</legend>
+            <ion-card color="secondary">
+              <ion-card-header>
+                <ion-card-title>9.99 €</ion-card-title>
+                <ion-card-subtitle>Achat de coupe de bois</ion-card-subtitle>
+              </ion-card-header>
+              <ion-card-content>
+                <div><ion-icon name="download-outline" aria-label="Download devis"></ion-icon></div>
+                <div>Téléchargez votre devis</div>
+              </ion-card-content>
+            </ion-card>
+          </fieldset>
+        </form>
+        <!-- END STEP 3 -->
+      </div>
     </div>
   </div>
 </ion-content>
