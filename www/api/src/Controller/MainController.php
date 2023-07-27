@@ -31,4 +31,18 @@ class MainController extends AbstractController
             'data' => $data
         ], $httpStatusCode);
     }
+    
+    /**
+     * Method imageToBase64
+     *
+     * @param $path $path [explicite description]
+     *
+     * @return string
+     */
+    protected function imageToBase64(string $pathToImg):string {
+        $type = pathinfo($pathToImg, PATHINFO_EXTENSION);
+        $data = file_get_contents($pathToImg);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    }
 }

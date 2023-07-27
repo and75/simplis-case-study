@@ -35,11 +35,14 @@ export class StepperComponent  implements OnInit {
 }
 
   setStep(step:number){
-    this.tSteps = this.tSteps.map((e, index)=>e= (step<index) ? "disabled" : 'active');
-    this.tSteps[step] = 'active';
-    this.current = step+1
-    console.log(this.current);
-    this.stepEvent.emit(this.current);
+    const goTo=step+1;
+    if(goTo<=this.current){
+      this.tSteps = this.tSteps.map((e, index)=>e= (step<index) ? "disabled" : 'active');
+      this.tSteps[step] = 'active';
+      this.current = goTo;
+      console.log(this.current);
+      this.stepEvent.emit(this.current);
+    }
   }
 
 }

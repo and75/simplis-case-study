@@ -5,7 +5,7 @@ import { Subscription } from '../../models/subscribe';
 
 import { AuthService } from '../auth.service'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of,shareReplay } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -20,11 +20,19 @@ export class SubscribeService {
     return new HttpHeaders();
   }
 
-  get AuthToken() {
+  /**
+   * 
+   * Prepared Not implemented
+   * get AuthToken() {
     return this.authService.authToken;
-  }
+    }
+   */
 
-  /** GET All Books */
+ 
+  /**
+   * @description Get list of Activities
+   * @returns Observable
+   */
   getActivities(): Observable<any> {
     const url = `${this.ApiServiceUrl}activities`;
     return this.http.get<Payload>(url, { headers: this.Header }).pipe(
@@ -33,25 +41,51 @@ export class SubscribeService {
     );
   }
 
+  /**
+   * searchActivities
+   * @param search:string 
+   * @returns Observable Payload
+   */
   searchActivities(search:string): Observable<any> {
 
       if (!search.trim()) {
         return of([]);
       }
-    
+
       const url = `${this.ApiServiceUrl}activities/search?q=${search}`;
       return this.http.get<Payload>(url, { headers: this.Header }).pipe(
         tap(_ => this.log(`fetched AppSearch matching "${search}"`)),
         catchError(this.handleError<any[]>('AppSearch', []))
       );
-      
   }
 
+  /**
+   * saveSubscription
+   * @description Save the subsciptions process
+   * @param data Subscription
+   * @returns Observable 
+   */
   saveSubscription(data:Subscription): Observable<any>{
-    const url = `${this.ApiServiceUrl}activities`;
-    return this.http.get<Payload>(url, { headers: this.Header }).pipe(
-      tap(_ => this.log(`fetched getActivities (all)`)),
-      catchError(this.handleError('getActivities (all)', []))
+    console.log(data);
+    const url = `${this.ApiServiceUrl}subscription/save`;
+    const formData: any = new FormData();
+    formData.append('subscription', JSON.stringify(data));
+    return this.http.post<Payload>(url, formData, { headers: this.Header }).pipe(
+      tap(_ => this.log(`fetched saveSubscription`)),
+      catchError(this.handleError('saveSubscription', []))
+    );
+  }
+
+  downloadPDF(id:any): Observable<any> {
+    let ApiUrl = `${environment.apiUrl}agreements/pdf?id=${id}`;
+    return this.http.get<any>(ApiUrl, {
+      headers: this.Header,
+      responseType: 'blob' as 'json',
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(
+        shareReplay(1),
+        catchError(this.handleError<any>(`downloadPdf`))
     );
   }
 

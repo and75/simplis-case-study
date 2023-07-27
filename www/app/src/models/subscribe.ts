@@ -15,10 +15,7 @@ export interface Customer {
 
  export interface Agreement {
     id:number|null
-    customer: Customer
-    activity : Activity
     date: string
-    time: string
  }
 
 export interface Subscribe {
@@ -26,7 +23,7 @@ export interface Subscribe {
     validStep:number[]
     activity:Activity|null
     customer:Customer|null
-    agreements:number|null
+    agreement:number|null
     treated: boolean
 }
 
@@ -36,7 +33,7 @@ export class Subscription implements Subscribe {
     validStep:number[]
     activity:Activity|null
     customer:Customer|null
-    agreements:number|null
+    agreement:number|null
     treated:boolean
 
     constructor(data: Subscribe) {
@@ -44,7 +41,7 @@ export class Subscription implements Subscribe {
         this.validStep = data.validStep;
         this.activity = data?.activity;
         this.customer = data?.customer;
-        this.agreements = data?.agreements;
+        this.agreement = data?.agreement;
         this.treated = data?.treated
     }
 

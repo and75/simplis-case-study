@@ -58,7 +58,7 @@ class PopulateController extends MainController
     public $populated = [];
 
 
-    #[Route('/populate', name: 'app_populate')]
+    #[Route('/populate', name: 'api_populate_db')]
     public function index(): JsonResponse
     {
 

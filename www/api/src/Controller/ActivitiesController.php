@@ -20,6 +20,7 @@ class ActivitiesController extends MainController
      * @return array
      */
     public function formatActivities($activities, $single=false):array{
+        
         $data = [];
         if(!empty($activities)){
             if(!$single){
@@ -44,8 +45,6 @@ class ActivitiesController extends MainController
         return $data;
     }
 
-   
- 
     /**
      * Method index
      *
@@ -92,4 +91,5 @@ class ActivitiesController extends MainController
             return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
+
 }

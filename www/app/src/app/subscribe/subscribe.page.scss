@@ -54,15 +54,19 @@
     }
 
     .autocomplete {
-      height: 201px;
-      margin: 32px -12px -2rem;
+
+      margin: 32px -12px -32px;
       border-top-left-radius: 0;
       border-top-right-radius: 0;
-      overflow-y: scroll;
 
-      legend {
-        text-align: left;
-        padding: 10px 0px
+      h5{
+        font-size:1rem;
+      }
+
+      .scroller{
+        height: 135px;
+        overflow-y: scroll;
+        margin: 0 0 20px;
       }
 
       ul {

@@ -31,7 +31,7 @@ class ActivitiesRepository extends ServiceEntityRepository
                 LEFT JOIN prices p ON a.price_id=p.id
                 WHERE a.name LIKE :searchTerm
                 ORDER BY a.name ASC
-                ';
+        ';
 
         $resultSet = $conn->executeQuery($sql, ['searchTerm' => '%' . $value . '%']);
 

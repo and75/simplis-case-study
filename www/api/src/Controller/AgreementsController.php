@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 use App\Entity\Agreements;
 use App\Entity\Customers;
 use App\Entity\Activities;
 use DateTime;
+use Dompdf\Dompdf;
 
 class AgreementsController extends MainController
 {
@@ -42,15 +44,6 @@ class AgreementsController extends MainController
         return $data;
     }
 
-    #[Route('/agreements', name: 'app_agreements')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/AgreementsController.php',
-        ]);
-    }
-
     /**
      * Method index
      *
@@ -58,8 +51,8 @@ class AgreementsController extends MainController
      *
      * @return JsonResponse
      */
-    #[Route('/agreements/all', name: 'api_customers_index')] 
-    public function all(): JsonResponse
+    #[Route('/agreements', name: 'api_agreements_index', methods:['Get'])] 
+    public function index(): JsonResponse
     {
         try {
             $agreements = $this->em->getRepository(Agreements::class)->findAll();
@@ -82,7 +75,7 @@ class AgreementsController extends MainController
      *
      * @return JsonResponse
      */
-    #[Route('/agreements/find', name: 'api_activities_find', methods:[''])] 
+    #[Route('/agreements/find', name: 'api_agreements__find', methods:['Get'])] 
     public function find(Request $request): JsonResponse{
         try {
             
@@ -106,7 +99,7 @@ class AgreementsController extends MainController
      *
      * @return JsonResponse
      */
-    #[Route('/customers/save', name: 'api_activities_find', methods:['Post'])]  
+    #[Route('/agreements/save', name: 'api_agreements_save', methods:['Post'])]  
     public function save(Request $request): JsonResponse{
         try{
             $data = $request->query->get('data');
@@ -123,15 +116,43 @@ class AgreementsController extends MainController
             $agreements->setDateCreated($date);
             $agreements->setTimeCreated($time);
             $agreements->setStatus('devis');
-
             $this->em->persist($agreements);
             $this->em->flush();
 
             return $this->setResponse(true, 'The entity was created successfully', $customer->getId());
+        
         }
         catch (\Exception $e) {
             return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
 
+    /**
+     * Method save
+     *
+     * @param Request $request [explicite description]
+     *
+     * @return JsonResponse
+     */
+    #[Route('/agreements/pdf', name: 'api_agreements_pdf', methods:['Get'])]  
+    public function pdf(Request $request): Response{
+
+        $data = [
+            'imageSrc'  => "" , //$this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/src/img/profile.png'),
+            'name'         => 'John Doe',
+            'address'      => 'USA',
+            'mobileNumber' => '000000000',
+            'email'        => 'john.doe@email.com'
+        ];
+        $html =  $this->renderView('pdf/agreements.html.twig', $data);
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+         
+        return new Response (
+            $dompdf->stream('resume', ["Attachment" => false]),
+            Response::HTTP_OK,
+            ['Content-Type' => 'application/pdf']
+        );
+    }
 }

@@ -34,6 +34,14 @@ docker-compose up -d
 127.0.0.1 static.localhost
 ```
 
+- Symfony install
+
+```shell
+cd www/api
+php composer.phar update
+
+```
+
 - Synfony prepare DB
 
 ```shell
@@ -48,8 +56,14 @@ php bin/console doctrine:migrations:migrate
 http://api.localhost/populate
 ```
 
-- Ionic build
+- Ionic install
 
+```shell
+cd www/app
+npm i
+```
+
+- Ionic build
 ```shell
 cd app
 ionic build
