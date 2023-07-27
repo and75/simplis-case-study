@@ -66,7 +66,6 @@ export class SubscribeService {
    * @returns Observable 
    */
   saveSubscription(data:Subscription): Observable<any>{
-    console.log(data);
     const url = `${this.ApiServiceUrl}subscription/save`;
     const formData: any = new FormData();
     formData.append('subscription', JSON.stringify(data));

@@ -120,7 +120,6 @@ export class Subscribe implements OnInit, OnDestroy {
   }
 
   setStep(e: number) {
-    console.log(e);
     this.subscription.currentStep = e;
   }
 
@@ -155,7 +154,6 @@ export class Subscribe implements OnInit, OnDestroy {
   }
 
   saveCustomer() {
-    //console.log(this.formData.status, this.formData.value, this.formData)
     if (this.formData.status == 'VALID') {
       this.actionSubmitted = true;
       this.subscription.customer = { ...this.subscription.customer, ...this.formData.value }
@@ -166,7 +164,6 @@ export class Subscribe implements OnInit, OnDestroy {
   saveSubscription(data: Customer) {
     this.showLoading('Nous traitons vos données...');
     this.subscribeService.saveSubscription(this.subscription).subscribe((res: Payload) => {
-      console.log(res)
       if (res.status == true) {
         this.loading.spinner = null;
         this.loading.message = 'Merci pour votre patience'
