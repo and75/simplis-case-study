@@ -73,8 +73,8 @@ class SubscriptionController extends MainController
              /**
               * Update subscription object to resend 
               */
-             $sub->customer  = $customer;
-             $sub->agreement = $agreem;
+             $sub->customer->id  = $customer->getId();
+             $sub->agreement = $agreem->getId();
              //$sub->agreement->date = $agreem->getDateCreated();
              $sub->treated = true;
 

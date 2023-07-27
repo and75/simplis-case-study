@@ -6,6 +6,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use App\Entity\Agreements;
 use App\Entity\Customers;
@@ -128,31 +129,58 @@ class AgreementsController extends MainController
     }
 
     /**
-     * Method save
+     * Method pdf
      *
      * @param Request $request [explicite description]
      *
-     * @return JsonResponse
+     * @return StreamedResponse
      */
     #[Route('/agreements/pdf', name: 'api_agreements_pdf', methods:['Get'])]  
-    public function pdf(Request $request): Response{
-
-        $data = [
-            'imageSrc'  => "" , //$this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/src/img/profile.png'),
-            'name'         => 'John Doe',
-            'address'      => 'USA',
-            'mobileNumber' => '000000000',
-            'email'        => 'john.doe@email.com'
-        ];
-        $html =  $this->renderView('pdf/agreements.html.twig', $data);
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml($html);
-        $dompdf->render();
+    public function pdf(Request $request): StreamedResponse{
          
-        return new Response (
-            $dompdf->stream('resume', ["Attachment" => false]),
-            Response::HTTP_OK,
-            ['Content-Type' => 'application/pdf']
-        );
+        $id = $request->query->get('id');
+
+        /**
+         * Get Agreements
+         */
+        $agreement = $this->em->getRepository(Agreements::class)->findOneBy(['id' => $id]);
+        if (!$agreement) {
+            $this->setResponse(false, 'No agreement found for id '.$id, 404);
+        }
+
+        
+        /**
+         * Prepare stream of PDF
+         */
+        $response = new StreamedResponse();
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        /**
+         * Set Dompdf
+         */
+        $dompdf = new Dompdf();
+        
+        $response->setCallback(function() use ($dompdf, $agreement) {
+
+            $data = [
+                'imageSrc'  => $this->imageToBase64($this->getParameter('kernel.project_dir') . '/public/assets/img/simplis-logo-small.png'),
+                'number'    => $agreement->getId(),
+                'date'      => date('m/d/Y', $agreement->getTimeCreated()),
+                'name'         => $agreement->getCustomer()->getRaisonSociale(),
+                'address'      => $agreement->getCustomer()->getAdressePostale(),
+                'siret'        => $agreement->getCustomer()->getSiret(),
+                'mobileNumber' => $agreement->getCustomer()->getTelephone(),
+                'email'        => $agreement->getCustomer()->getEmail(),
+                'activity'     => $agreement->getActivity()->getName(),
+                'coverage'     => $agreement->getActivity()->getCoverage(),
+                'price'     => $agreement->getActivity()->getPrice()->getPriceTt(),
+            ];
+            $html =  $this->renderView('pdf/agreements.html.twig', $data);
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->render();
+            $dompdf->stream('resume', ["Attachment" => false]);
+        });
+        return $response;
     }
 }

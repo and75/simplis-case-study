@@ -51,7 +51,7 @@ export class SubscribeService {
       if (!search.trim()) {
         return of([]);
       }
-
+ 
       const url = `${this.ApiServiceUrl}activities/search?q=${search}`;
       return this.http.get<Payload>(url, { headers: this.Header }).pipe(
         tap(_ => this.log(`fetched AppSearch matching "${search}"`)),
