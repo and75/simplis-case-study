@@ -13,7 +13,7 @@ use DateTime;
 
 class SubscriptionController extends MainController
 {
-    #[Route('/subscription/save', name: 'app_subscription_save', methods:'Post')]
+    #[Route('/subscription/save', name: 'app_subscription_save', methods:['Post', 'Get'])]
     public function save(Request $request): JsonResponse
     {
         try{
@@ -73,9 +73,9 @@ class SubscriptionController extends MainController
              /**
               * Update subscription object to resend 
               */
-             $sub->customer->id  = $customer->getId();
-             $sub->agreement->id = $agreem->getId();
-             $sub->agreement->date = $agreem->getDateCreated();
+             $sub->customer  = $customer;
+             $sub->agreement = $agreem;
+             //$sub->agreement->date = $agreem->getDateCreated();
              $sub->treated = true;
 
             return $this->setResponse(true, 'Report test', $sub);

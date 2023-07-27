@@ -20,7 +20,7 @@ export interface Customer {
 
 export interface Subscribe {
     currentStep:number
-    validStep:number[]
+    validStep:number
     activity:Activity|null
     customer:Customer|null
     agreement:number|null
@@ -30,7 +30,7 @@ export interface Subscribe {
 export class Subscription implements Subscribe {
     
     currentStep:number
-    validStep:number[]
+    validStep:number
     activity:Activity|null
     customer:Customer|null
     agreement:number|null

@@ -29,7 +29,7 @@ export class Subscribe implements OnInit, OnDestroy {
   protected subscription: Subscription = new Subscription(
     {
       currentStep: 1,
-      validStep: [0],
+      validStep: 0,
       activity: null,
       customer: null,
       agreement: null,
