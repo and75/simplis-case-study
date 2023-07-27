@@ -1,14 +1,10 @@
 
-
-
-
 # Simplis Case Study
 The goal of this case study is to create a tunnel of professional civil liability devices.
 
 ## Stack
 - Backend : Symfony 6.3
-- Frontend : Angular 16
-
+- Frontend : Ionic/Angular 16
 
 ## Infrastructure
 The project come whith infrastructure based on a basic LAMP stack environment built using Docker Compose. It consists of the following :
@@ -38,7 +34,40 @@ docker-compose up -d
 127.0.0.1 static.localhost
 ```
 
-Your stack is now ready!! You can access it via `http://localhost`.
+- Symfony install
+
+```shell
+cd www/api
+php composer.phar update
+
+```
+
+- Synfony prepare DB
+
+```shell
+docker-compose exec webserver bash
+cd api
+php bin/console doctrine:migrations
+php bin/console doctrine:migrations:migrate
+```
+
+- Populate Db
+```
+http://api.localhost/populate
+```
+
+- Ionic install
+
+```shell
+cd www/app
+npm i
+```
+
+- Ionic build
+```shell
+cd app
+ionic build
+```
 
 
 ### General Information
@@ -84,6 +113,7 @@ May differ for PHP Versions <7.x.x
 - xml
 - xmlrpc
 - gd
+- dom
 
 ### phpMyAdmin
 

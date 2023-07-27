@@ -1,9 +1,14 @@
+.main {
+  height: 100vh;
+  margin: 30px 0px;
+  padding: 0 10Px;
+  width: 100vw;
+}
+
 .container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100%;
-  margin: 0 30px;
 }
 
 .box-subscribe {
@@ -11,8 +16,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  min-height: 60vh;
-  max-width: 600px;
+  max-width: 400px;
 
   img.logo {
     width: 200px;
@@ -29,6 +33,7 @@
   }
 
   form {
+
     width: 100%;
     text-align: center;
     margin-top: 1rem;
@@ -36,8 +41,10 @@
     fieldset {
       border: thick solid var(--ion-color-primary);
       border-radius: 15px;
+      padding-bottom: 2rem;
     }
 
+    .autocomplete,
     legend {
       color: #FFF;
       background: var(--ion-color-primary);
@@ -46,14 +53,77 @@
       border-radius: 10px;
     }
 
+    .autocomplete {
+
+      margin: 32px -12px -32px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+
+      h5{
+        font-size:1rem;
+      }
+
+      .scroller{
+        height: 135px;
+        overflow-y: scroll;
+        margin: 0 0 20px;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display:flex;
+        flex-direction: column;
+        li {
+          flex:auto;
+          padding: 10px;
+          font-size: 0.8rem;
+          cursor: pointer;
+          text-align: left;
+          border-bottom: 1px solid #fff;
+        }
+
+        li:hover {
+          background-color: var(--ion-color-secondary);
+        }
+      }
+    }
+
     ion-input {
       text-align: left;
+      margin: 15px 0;
     }
 
     ion-button {
       margin-top: 2rem;
     }
 
+    fieldset.step3 {
+      background-color: var(--ion-color-secondary);
+
+      ion-card ion-card-title {
+        font-size: 4rem;
+        font-weight: bold;
+      }
+
+      ion-card ion-card-subtitle {
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      ion-card ion-icon {
+        font-size: 3rem;
+      }
+    }
+
   }
 
+}
+
+@media screen and (min-device-width: 1200px) {
+  .box-subscribe {
+    min-width: 500px;
+  }
 }

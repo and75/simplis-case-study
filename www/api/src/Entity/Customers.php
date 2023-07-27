@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CustomersRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CustomersRepository::class)]
@@ -32,6 +33,12 @@ class Customers
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: Agreements::class)]
     private Collection $agreement;
+
+    #[ORM\Column(length: 255)]
+    private ?string $time_created = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_created = null;
 
     public function __construct()
     {
@@ -129,6 +136,30 @@ class Customers
                 $agreement->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTimeCreated(): ?string
+    {
+        return $this->time_created;
+    }
+
+    public function setTimeCreated(string $time_created): static
+    {
+        $this->time_created = $time_created;
+
+        return $this;
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->date_created;
+    }
+
+    public function setDateCreated(\DateTimeInterface $date_created): static
+    {
+        $this->date_created = $date_created;
 
         return $this;
     }

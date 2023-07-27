@@ -20,6 +20,7 @@ class ActivitiesController extends MainController
      * @return array
      */
     public function formatActivities($activities, $single=false):array{
+        
         $data = [];
         if(!empty($activities)){
             if(!$single){
@@ -27,21 +28,23 @@ class ActivitiesController extends MainController
                     $data[] = [
                         'id'=>$activity->getId(),
                         'name'=>$activity->getName(),
-                        'coverage'=>$activity->getCoverage()
+                        'coverage'=>$activity->getCoverage(),
+                        'price'=>$activity->getPrice()->getPriceTt()
                     ];
                 }
             } else{
                 $data[] = [
                     'id'=>$activities->getId(),
                     'name'=>$activities->getName(),
-                    'coverage'=>$activities->getCoverage()
+                    'coverage'=>$activities->getCoverage(),
+                    'price'=>$activities->getPrice(),
+                    'price_d'=>$activities->getPriceD()->getPriceTt()
                 ];
             }
         } 
         return $data;
     }
 
-   
     /**
      * Method index
      *
@@ -74,21 +77,19 @@ class ActivitiesController extends MainController
      *
      * @return JsonResponse
      */
-    #[Route('/activities/find', name: 'api_activities_find', methods:['GET'])] 
+    #[Route('/activities/search', name: 'api_activities_search', methods:['GET'])] 
     public function find(Request $request): JsonResponse{
         try {
-            
-            $id = $request->query->get('id');
-            $activities = $this->em->getRepository(Activities::class)->find($id);
-            $data = $this->formatActivities($activities, true);
-            if(empty($data)){
-                return $this->setResponse(false, 'Not Found', $data, 404 );
+            $query = $request->query->get('q');
+            $activities = $this->em->getRepository(Activities::class)->searchByName($query);
+            if(empty($activities)){
+                return $this->setResponse(false, 'Not Found', $activities, 404 );
             }
-            return $this->setResponse(true, 'Not Found', $data);
-
+            return $this->setResponse(true, 'Found', $activities);
         }
         catch (\Exception $e) {
             return $this->setResponse(false, $e->getMessage(), [], 500 );
         }
     }
+
 }

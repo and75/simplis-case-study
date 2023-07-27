@@ -21,28 +21,48 @@ class ActivitiesRepository extends ServiceEntityRepository
         parent::__construct($registry, Activities::class);
     }
 
-//    /**
-//     * @return Activities[] Returns an array of Activities objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Activities
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function searchByName(string $value): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+                SELECT * FROM activities a
+                LEFT JOIN prices p ON a.price_id=p.id
+                WHERE a.name LIKE :searchTerm
+                ORDER BY a.name ASC
+        ';
+
+        $resultSet = $conn->executeQuery($sql, ['searchTerm' => '%' . $value . '%']);
+
+        // returns an array of arrays (i.e. a raw data set)
+        return $resultSet->fetchAllAssociative();
+    }
+
+
+    
+    //    /**
+    //     * @return Activities[] Returns an array of Activities objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('a')
+    //            ->andWhere('a.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('a.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Activities
+    //    {
+    //        return $this->createQueryBuilder('a')
+    //            ->andWhere('a.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

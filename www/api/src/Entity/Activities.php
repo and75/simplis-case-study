@@ -25,6 +25,16 @@ class Activities
     #[ORM\OneToMany(mappedBy: 'activity', targetEntity: Agreements::class)]
     private Collection $agreements;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Prices $price = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $time_created = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $date_created = null;
+
     public function __construct()
     {
         $this->agreements = new ArrayCollection();
@@ -85,6 +95,42 @@ class Activities
                 $agreement->setActivity(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?Prices
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?Prices $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getTimeCreated(): ?string
+    {
+        return $this->time_created;
+    }
+
+    public function setTimeCreated(string $time_created): static
+    {
+        $this->time_created = $time_created;
+
+        return $this;
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->date_created;
+    }
+
+    public function setDateCreated(\DateTimeInterface $date_created): static
+    {
+        $this->date_created = $date_created;
 
         return $this;
     }

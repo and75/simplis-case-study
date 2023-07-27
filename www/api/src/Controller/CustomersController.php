@@ -11,7 +11,7 @@ use App\Entity\Customers;
 class CustomersController extends MainController
 {
    /**
-     * Method formatActivities
+     * Method formatcustomers
      *
      * @param $data $data [explicite description]
      *
@@ -73,13 +73,13 @@ class CustomersController extends MainController
      *
      * @return JsonResponse
      */
-    #[Route('/customers/find', name: 'api_activities_find', methods:[''])] 
+    #[Route('/customers/find', name: 'api_customers_find', methods:[''])] 
     public function find(Request $request): JsonResponse{
         try {
             
             $id = $request->query->get('id');
-            $activities = $this->em->getRepository(Activities::class)->find($id);
-            $data = $this->formatData($activities, true);
+            $customers = $this->em->getRepository(Customer::class)->find($id);
+            $data = $this->formatData($customers, true);
             if(empty($data)){
                 return $this->setResponse(false, 'Not Found', $data, 404 );
             }
@@ -98,7 +98,7 @@ class CustomersController extends MainController
      *
      * @return JsonResponse
      */
-    #[Route('/customers/save', name: 'api_activities_find', methods:['Post'])]  
+    #[Route('/customers/save', name: 'api_customers_save', methods:['Post'])]  
     public function save(Request $request): JsonResponse{
         try{
             $data = $request->query->get('data');
