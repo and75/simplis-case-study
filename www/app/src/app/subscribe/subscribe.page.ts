@@ -165,7 +165,6 @@ export class Subscribe implements OnInit, OnDestroy {
     this.showLoading('Nous traitons vos données...');
     this.subscribeService.saveSubscription(this.subscription).subscribe((res: Payload) => {
       if (res.status == true) {
-        console.log(res);
         this.loading.spinner = null;
         this.loading.message = 'Merci pour votre patience'
         setTimeout(() => {
@@ -181,6 +180,7 @@ export class Subscribe implements OnInit, OnDestroy {
    * Step 3
    */
   downloadPDF() {
+    this.showLoading('Nous preparon votre devis...');
     this.subscribeService.downloadPDF('2').subscribe(
       (event: HttpEvent<any>) => {
         console.log(event);
@@ -196,13 +196,17 @@ export class Subscribe implements OnInit, OnDestroy {
             //console.log(`Dowloaded .. ${this.progress}%`);
             break;
           case HttpEventType.Response:
-            const url = (window.URL || window.webkitURL).createObjectURL(event.body);
-            window.open(url, '_blank');
 
+            this.loading.spinner = null;
+            this.loading.message = 'Merci pour votre patience'
+            const url = (window.URL || window.webkitURL).createObjectURL(event.body);
+            this.loading.dismiss()
+            window.open(url, '_blank');
             // rewoke URL after 15 minutes
             setTimeout(() => {
               window.URL.revokeObjectURL(url);
             }, 15 * 60 * 1000);
+           
         }
       }
     );
