@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Activity, Customer, Subscription } from '../../models/subscribe'
+import { Activity, Customer, ApiSubscribe, APISubscription } from '../../models/subscribe'
 import { SubscribeService } from './subscribe.service'
 import { Payload } from '../../models/payload';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -20,34 +21,24 @@ export class Subscribe implements OnInit, OnDestroy {
   public actionSubmitted: boolean = false;
   public loading: any;
 
+  /**
+   * Create arrai off subscription for cleaner
+   */
+  public subscriptions:Subscription[] = [];
+
+
   /** Var of query for search */
   public query: string = "";
 
   /**
    * Set default subscription object
    */
-  protected subscription: Subscription = new Subscription(
-    {
-      currentStep: 1,
-      validStep: 0,
-      activity: null,
-      customer: null,
-      agreement: null,
-      treated: false
-    }
-  )
+  protected subscriber: ApiSubscribe;
 
   /**
    * Set default Customer form object
    */
-  private customer: Customer = {
-    id: null,
-    raison_sociale: '',
-    siret: '',
-    adresse_postale: '',
-    email: '',
-    telephone: null
-  };
+  private customer: Customer;
 
   /**
    * Define formData for Customer form
@@ -55,10 +46,17 @@ export class Subscribe implements OnInit, OnDestroy {
   public formData: FormGroup;
 
   constructor(
-    private subscribeService: SubscribeService,
+    private subscriberService: SubscribeService,
     private loadingCtrl: LoadingController) { }
 
   ngOnInit(): void {
+
+    //Prepare default subscription
+    this.setSubscriber();
+
+    //Prepare customers default value
+    this.setCustomer();
+
     //Prepare form
     this.setForm();
     //Get most used activities (as example)
@@ -67,23 +65,50 @@ export class Subscribe implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.findedActivities = null;
+    this.cleanSubscriptions();
+  }
+
+  setCustomer(){
+    this.customer = {
+      id: null,
+      raison_sociale: '',
+      siret: '',
+      adresse_postale: '',
+      email: '',
+      telephone: null
+    };
+  }
+
+
+  setSubscriber(){
+    this.subscriber = new APISubscription(
+      {
+        currentStep: 1,
+        validStep: 0,
+        activity: null,
+        customer: null,
+        agreement: null,
+        treated: false
+      }
+    )
   }
 
   /**
    * General Action and templating settings
    */
   getStepButtonTitle(): string {
-    if (this.subscription.currentStep == 3) {
+    if (this.subscriber.currentStep == 3) {
       return "Je finalise mon achat";
     }
     return "Poursuivre ma souscription ";
   }
 
   async showLoading(message: string) {
-    this.loading = await this.loadingCtrl.create({
+    let loading = await this.loadingCtrl.create({
       message: message,
     });
-    this.loading.present();
+    loading.present();
+    return loading;
   }
 
   /**
@@ -91,7 +116,7 @@ export class Subscribe implements OnInit, OnDestroy {
    */
   lastActivities() {
     this.activities = null;
-    this.subscribeService.getActivities().subscribe((res: Payload) => {
+    this.subscriberService.getActivities().subscribe((res: Payload) => {
       if (res.status == true) {
         this.activities = res.data;
         this.findedActivities = this.activities;
@@ -101,12 +126,14 @@ export class Subscribe implements OnInit, OnDestroy {
 
   searchActivities() {
     this.activities = null;
-    this.subscribeService.searchActivities(this.query).subscribe((res: Payload) => {
-      if (res.status == true) {
-        this.findedActivities = null;
-        this.findedActivities = res.data;
-      }
-    })
+    this.subscriptions.push(
+      this.subscriberService.searchActivities(this.query).subscribe((res: Payload) => {
+        if (res.status == true) {
+          this.findedActivities = null;
+          this.findedActivities = res.data;
+        }
+      })
+    )
   }
 
   filter(e: any) {
@@ -120,26 +147,27 @@ export class Subscribe implements OnInit, OnDestroy {
   }
 
   setStep(e: number) {
-    this.subscription.currentStep = e;
+    this.subscriber.currentStep = e;
   }
 
   setActivity(activity: Activity) {
-    this.subscription.activity = activity;
+    this.subscriber.activity = activity;
     this.query = activity.name;
     setTimeout(() => {
-      this.subscription.currentStep = 2
+      this.subscriber.currentStep = 2
     }, 2000)
   }
 
   getAutocompleteLabel(): string {
-    if (this.actionSubmitted && this.subscription.currentStep == 1) {
+    if (this.actionSubmitted && this.subscriber.currentStep == 1) {
       return "Sélectionnez une activité dans le résultat";
     }
     return "Les activité le plus recherche";
   }
 
   /**
-   * Step 2 - Save Customer
+   * Step 2 
+   * Save Customer
    */
   setForm() {
     this.formData = new FormGroup(
@@ -156,60 +184,92 @@ export class Subscribe implements OnInit, OnDestroy {
   saveCustomer() {
     if (this.formData.status == 'VALID') {
       this.actionSubmitted = true;
-      this.subscription.customer = { ...this.subscription.customer, ...this.formData.value }
-      this.saveSubscription(this.formData.value);
+      this.subscriber.customer = { ...this.subscriber.customer, ...this.formData.value }
+      this.saveSubscriber(this.formData.value);
     }
   }
 
-  saveSubscription(data: Customer) {
-    this.showLoading('Nous traitons vos données...');
-    this.subscribeService.saveSubscription(this.subscription).subscribe((res: Payload) => {
-      if (res.status == true) {
-        this.loading.spinner = null;
-        this.loading.message = 'Merci pour votre patience'
-        setTimeout(() => {
-          this.loading.dismiss().then(() => {
-            this.subscription.currentStep = 3;
-          });
-        }, 2000)
-      }
-    })
+  async saveSubscriber(data: Customer) {
+    this.loading = await this.showLoading('Nous traitons vos données...');
+    setTimeout(() => {
+      this.subscriptions.push(
+        this.subscriberService.saveSubscription(this.subscriber).subscribe((res: Payload) => {
+          if (res.status == true) {
+            this.loading.spinner = null;
+            this.loading.message = 'Merci pour votre patience'
+            setTimeout(() => {
+              this.loading.dismiss().then(() => {
+                this.subscriber.currentStep = 3;
+              });
+            }, 2000)
+          }
+        })
+      );
+    },2000)
+    
   }
 
   /**
    * Step 3
+   * Download Pdf
    */
-  downloadPDF() {
-    this.showLoading('Nous preparon votre devis...');
-    this.subscribeService.downloadPDF('2').subscribe(
-      (event: HttpEvent<any>) => {
-        console.log(event);
-        switch (event.type) {
-          case HttpEventType.Sent:
-            //console.log('Request has been made!');
-            break;
-          case HttpEventType.ResponseHeader:
-            //console.log('Response header has been received!');
-            break;
-          case HttpEventType.DownloadProgress:
-            //progress = Math.round(event.loaded / data.size * 100);
-            //console.log(`Dowloaded .. ${this.progress}%`);
-            break;
-          case HttpEventType.Response:
-
-            this.loading.spinner = null;
-            this.loading.message = 'Merci pour votre patience'
-            const url = (window.URL || window.webkitURL).createObjectURL(event.body);
-            this.loading.dismiss()
-            window.open(url, '_blank');
-            // rewoke URL after 15 minutes
-            setTimeout(() => {
-              window.URL.revokeObjectURL(url);
-            }, 15 * 60 * 1000);
-           
+  async downloadPDF() {
+    this.subscriptions.push(
+      this.subscriberService.downloadPDF('2').subscribe(
+        (event: HttpEvent<any>) => {
+          console.log(event);
+          switch (event.type) {
+            case HttpEventType.Sent:
+              //console.log('Request has been made!');
+              break;
+            case HttpEventType.ResponseHeader:
+              //console.log('Response header has been received!');
+              break;
+            case HttpEventType.DownloadProgress:
+              //progress = Math.round(event.loaded / data.size * 100);
+              //console.log(`Dowloaded .. ${this.progress}%`);
+              break;
+            case HttpEventType.Response:
+              const url = (window.URL || window.webkitURL).createObjectURL(event.body);
+              window.open(url, '_blank');
+  
+              // rewoke URL after 15 minutes
+              setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+              }, 15 * 60 * 1000);
+          }
         }
-      }
+      )  
     );
   }
 
+  /**
+   * Refresh methods
+   * @param event 
+   */
+  handleRefresh(event:any) {
+    setTimeout(() => {
+      this.reset()
+      event.target.complete();
+    }, 2000);
+  }
+
+  /**
+   * Clean subscription for not leak memory
+   */
+  cleanSubscriptions(){
+    if(this.subscriptions.length>0){
+      this.subscriptions.forEach((subscription) => subscription.unsubscribe())
+    }
+  }
+
+  /**
+   * Reset  on refresch
+   */
+  reset():void{
+    this.query = '';
+    this.setSubscriber();
+    this.setCustomer();
+    this.setForm();
+  }
 }

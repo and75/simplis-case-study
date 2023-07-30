@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Payload } from '../../models/payload';
-import { Subscription } from '../../models/subscribe';
+import { ApiSubscribe } from '../../models/subscribe';
 
 import { AuthService } from '../auth.service'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -62,10 +62,10 @@ export class SubscribeService {
   /**
    * saveSubscription
    * @description Save the subsciptions process
-   * @param data Subscription
+   * @param data ApiSubscribe
    * @returns Observable 
    */
-  saveSubscription(data:Subscription): Observable<any>{
+  saveSubscription(data:ApiSubscribe): Observable<any>{
     const url = `${this.ApiServiceUrl}subscription/save`;
     const formData: any = new FormData();
     formData.append('subscription', JSON.stringify(data));
