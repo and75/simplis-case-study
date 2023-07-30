@@ -18,7 +18,7 @@ export interface Customer {
     date: string
  }
 
-export interface Subscribe {
+export interface ApiSubscribe {
     currentStep:number
     validStep:number
     activity:Activity|null
@@ -27,7 +27,7 @@ export interface Subscribe {
     treated: boolean
 }
 
-export class Subscription implements Subscribe {
+export class APISubscription implements ApiSubscribe {
     
     currentStep:number
     validStep:number
@@ -36,7 +36,7 @@ export class Subscription implements Subscribe {
     agreement:number|null
     treated:boolean
 
-    constructor(data: Subscribe) {
+    constructor(data: ApiSubscribe) {
         this.currentStep = data.currentStep;
         this.validStep = data.validStep;
         this.activity = data?.activity;

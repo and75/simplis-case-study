@@ -1,13 +1,16 @@
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <div class="main">
     <div class="container">
       <div class="box-subscribe">
-        <img class="logo" src="http://static.localhost/assets/img/simplis-logo-B100.svg"
+        <img class="logo" src="http://static.bsys3.fr/assets/img/simplis-logo-B100.svg"
           alt="L'assurance professionnelle des Auto-Entrepreneurs et des Indépendants">
         <p class="claimer" color="secondary">"C'est parti pour vous assurer au meilleur tarif et en quelques clics !"
         </p>
-        <app-stepper [current]="subscription.currentStep" (stepEvent)="setStep($event)"></app-stepper>
-        <form *ngIf="subscription.currentStep==1">
+        <app-stepper [current]="subscriber.currentStep" (stepEvent)="setStep($event)"></app-stepper>
+        <form *ngIf="subscriber.currentStep==1">
           <fieldset>
             <div class="loader"></div>
             <legend>L'activité que vous souhaitez assurer ? </legend>
@@ -30,7 +33,7 @@
 
         <!-- STEP 2-->
 
-        <form [formGroup]="formData" (ngSubmit)="saveCustomer()" *ngIf="subscription.currentStep==2">
+        <form [formGroup]="formData" (ngSubmit)="saveCustomer()" *ngIf="subscriber.currentStep==2">
           <fieldset>
             <legend>Quelques informations sur votre entreprise !</legend>
             <ion-input type="text" formControlName="raison_sociale" label="Raison sociale" labelPlacement="floating"
@@ -60,13 +63,13 @@
         </form>
         <!-- END STEP 2-->
         <!-- STEP 3 -->
-        <form *ngIf="subscription.currentStep==3" >
+        <form *ngIf="subscriber.currentStep==3" >
           <fieldset class="step3">
             <legend>Notre offre sur mesure pour vous !</legend>
             <ion-card color="secondary">
               <ion-card-header>
-                <ion-card-title>{{subscription.activity.price}} €</ion-card-title>
-                <ion-card-subtitle>{{subscription.activity.name}}</ion-card-subtitle>
+                <ion-card-title>{{subscriber.activity.price}} €</ion-card-title>
+                <ion-card-subtitle>{{subscriber.activity.name}}</ion-card-subtitle>
               </ion-card-header>
               <ion-card-content (click)="downloadPDF()">
                 <div class="downLoad">
