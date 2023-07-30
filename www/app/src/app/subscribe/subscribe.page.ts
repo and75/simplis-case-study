@@ -195,6 +195,7 @@ export class Subscribe implements OnInit, OnDestroy {
       this.subscriptions.push(
         this.subscriberService.saveSubscription(this.subscriber).subscribe((res: Payload) => {
           if (res.status == true) {
+            this.subscriber = res.data;
             this.loading.spinner = null;
             this.loading.message = 'Merci pour votre patience'
             setTimeout(() => {
