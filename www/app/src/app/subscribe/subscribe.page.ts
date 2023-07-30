@@ -215,7 +215,7 @@ export class Subscribe implements OnInit, OnDestroy {
    */
   async downloadPDF() {
     this.subscriptions.push(
-      this.subscriberService.downloadPDF('2').subscribe(
+      this.subscriberService.downloadPDF(this.subscriber.agreement).subscribe(
         (event: HttpEvent<any>) => {
           console.log(event);
           switch (event.type) {
