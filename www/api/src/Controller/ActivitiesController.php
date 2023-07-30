@@ -37,8 +37,7 @@ class ActivitiesController extends MainController
                     'id'=>$activities->getId(),
                     'name'=>$activities->getName(),
                     'coverage'=>$activities->getCoverage(),
-                    'price'=>$activities->getPrice(),
-                    'price_d'=>$activities->getPriceD()->getPriceTt()
+                    'price'=>$activities->getPrice()->getPriceTt()
                 ];
             }
         } 
