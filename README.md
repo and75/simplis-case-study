@@ -47,7 +47,7 @@ php composer.phar update
 ```shell
 docker-compose exec webserver bash
 cd api
-php bin/console doctrine:migrations
+php bin/console make:migration
 php bin/console doctrine:migrations:migrate
 ```
 
